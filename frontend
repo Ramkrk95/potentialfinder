@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opportunity Finder Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select, button {
+      display: block;
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f4f4f4;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Opportunity Finder Tool</h1>
+
+  <form id="opportunity-finder-form">
+    <label for="company-name">Company Name:</label>
+    <input type="text" id="company-name" name="company-name" required>
+
+    <label for="industry">Industry:</label>
+    <select id="industry" name="industry" required>
+      <option value="BFSI">BFSI</option>
+      <option value="Fintech">Fintech</option>
+      <option value="Insurance">Insurance</option>
+      <option value="Legal">Legal</option>
+      <option value="HR">HR</option>
+      <!-- Add more industries as needed -->
+    </select>
+
+    <label for="employee-size">Employee Size:</label>
+    <select id="employee-size" name="employee-size" required>
+      <option value="small">1-50</option>
+      <option value="medium">51-200</option>
+      <option value="large">201-1000</option>
+      <option value="enterprise">1001+</option>
+    </select>
+
+    <label for="product">Product:</label>
+    <select id="product" name="product" required>
+      <option value="eSign">eSign</option>
+      <option value="eStamp">eStamp</option>
+      <option value="eKYC">eKYC</option>
+    </select>
+
+    <button type="submit">Find Opportunities</button>
+  </form>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    document.getElementById('opportunity-finder-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const companyName = document.getElementById('company-name').value;
+      const industry = document.getElementById('industry').value;
+      const employeeSize = document.getElementById('employee-size').value;
+      const product = document.getElementById('product').value;
+
+      const response = await fetch('http://localhost:3000/predict-transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          companyName,
+          industry,
+          employeeSize,
+          product
+        })
+      });
+
+      const result = await response.json();
+      document.getElementById('result').innerText = `Estimated Transactions: ${result.estimatedTransactions}`;
+    });
+  </script>
+
+</body>
+</html>
